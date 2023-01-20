@@ -18,11 +18,6 @@ void resize_callback(GLFWwindow *window, int new_w, int new_h) {
   resize(new_w, new_h);
 }
 
-void cursor_callback(GLFWwindow *window, double xpos, double ypos) {
-  (void)window;
-  mouse_move(xpos, ypos);
-}
-
 int glCreateBuffer() {
   unsigned int buf;
   glCreateBuffers(1, &buf);
@@ -74,7 +69,6 @@ int main(void) {
   printf("Created window with OpenGL version: %s\n", glGetString(GL_VERSION));
 
   glfwSetFramebufferSizeCallback(window, resize_callback);
-  glfwSetCursorPosCallback(window, cursor_callback);
 
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(message_callback, 0);

@@ -137,17 +137,15 @@ WebAssembly.instantiateStreaming(fetch('./voronoi.wasm'), {
   resize()
 
   exports.render_init()
-  addEventListener('mousemove', e => {
-    exports.mouse_move(e.x, e.y)
-  })
 
-  let last = performance.now()
-  let dt = 0
+  let last = null
 
-  setInterval(() => {
-    exports.render_update(dt)
-    const now = performance.now()
-    dt = (now - last) / 1000
-    last = now
-  }, 0)
+  function step(t) {
+    if (last) exports.render_update((t - last) / 1000)
+
+    last = t
+    requestAnimationFrame(step)
+  }
+
+  requestAnimationFrame(step)
 })

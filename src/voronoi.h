@@ -7,6 +7,5 @@ export void render_init();
 export void render_update(float);
 
 export void resize(int, int);
-export void mouse_move(float, float);
 
 #endif

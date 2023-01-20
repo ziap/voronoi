@@ -6,13 +6,12 @@ const decoder = new TextDecoder()
 
 function cstr(ptr) {
   const mem_arr = new Uint8Array(memory_buffer)
+
   let len = 0;
-  while (mem_arr[ptr + len] != 0) {
-    len++
-  }
+  while (mem_arr[ptr + len]) ++len
+
   const bytes = mem_arr.slice(ptr, ptr + len)
-  const str = decoder.decode(bytes);
-  return str
+  return decoder.decode(bytes);
 }
 
 let shaders = []
@@ -128,7 +127,6 @@ WebAssembly.instantiateStreaming(fetch('./voronoi.wasm'), {
   const { exports } = wasm.instance
   memory_buffer = exports.memory.buffer
 
-
   function resize() {
     canvas.width = innerWidth
     canvas.height = innerHeight
@@ -142,7 +140,6 @@ WebAssembly.instantiateStreaming(fetch('./voronoi.wasm'), {
   addEventListener('mousemove', e => {
     exports.mouse_move(e.x, e.y)
   })
-
 
   let last = performance.now()
   let dt = 0

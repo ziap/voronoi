@@ -31,7 +31,6 @@ extern int glCreateShader(unsigned int);
 extern int glCreateProgram(void);
 extern int glGetUniformLocation(unsigned int, const char*);
 extern int glGetShaderParameter(unsigned int, unsigned int);
-extern void glClearColor(float, float, float, float);
 extern void glViewport(int, int, int, int);
 extern void glSetShaderSource(unsigned int, const char*);
 extern void glCompileShader(unsigned int);

@@ -19,18 +19,16 @@ void resize(int new_w, int new_h) {
 #define SEED_COUNT 128
 #define TRIGS_PER_SEED 32
 
-const char *fragment_shader_compile_error = "Failed to compile fragment shader";
-const char *vertex_shader_compile_error = "Failed to compile vertex shader";
-
 static int compile_shader(const char *src, unsigned int type) {
   unsigned int shader = glCreateShader(type);
   glSetShaderSource(shader, src);
   glCompileShader(shader);
 
   if (!glGetShaderParameter(shader, GL_COMPILE_STATUS)) {
-    if (type == GL_FRAGMENT_SHADER) puts(fragment_shader_compile_error);
-    else
-      puts(vertex_shader_compile_error);
+    const char *msg = type == GL_VERTEX_SHADER
+                        ? "ERROR: Failed to compile fragment shader"
+                        : "ERROR: Failed to compile vertex shader";
+    puts(msg);
     glDeleteShader(shader);
     return 0;
   }
@@ -45,6 +43,7 @@ static int create_program(const char *vertex_src, const char *fragment_src) {
 
   glAttachShader(program, vertex_shader);
   glAttachShader(program, fragment_shader);
+
   glLinkProgram(program);
   glValidateProgram(program);
 
@@ -61,13 +60,13 @@ typedef struct {
   float vx;
   float vy;
 
-  float color;
+  float hue;
 } Seed;
 
 typedef struct {
-  float position[2];
+  float pos[2];
 
-  float color;
+  float hue;
 } Vertex;
 
 Seed seeds[SEED_COUNT];
@@ -77,7 +76,7 @@ Seed create_seed() {
   s.x = frand();
   s.y = frand();
 
-  s.color = frand();
+  s.hue = frand();
 
   float angle = frand() * 2 * PI;
   float speed = 0.04 + frand() * 0.08;
@@ -97,7 +96,7 @@ void render_init() {
     seeds[i] = create_seed();
 
     for (int j = 0; j < 3 * TRIGS_PER_SEED; ++j) {
-      vertices[3 * TRIGS_PER_SEED * i + j].color = seeds[i].color;
+      vertices[3 * TRIGS_PER_SEED * i + j].hue = seeds[i].hue;
     }
   }
 
@@ -110,13 +109,12 @@ void render_init() {
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(
-    0, 2, GL_FLOAT, false, sizeof(Vertex),
-    (const void *)offsetof(Vertex, position)
+    0, 2, GL_FLOAT, false, sizeof(Vertex), (const void *)offsetof(Vertex, pos)
   );
 
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(
-    1, 1, GL_FLOAT, false, sizeof(Vertex), (const void *)offsetof(Vertex, color)
+    1, 1, GL_FLOAT, false, sizeof(Vertex), (const void *)offsetof(Vertex, hue)
   );
 
   u_resolution = glGetUniformLocation(main_program, "u_resolution");
@@ -144,16 +142,18 @@ void render_update(float dt) {
     update_seed(seeds + i, dt);
 
     for (int j = 0; j < 3 * TRIGS_PER_SEED; ++j) {
-      vertices[3 * TRIGS_PER_SEED * i + j].position[0] = seeds[i].x;
-      vertices[3 * TRIGS_PER_SEED * i + j].position[1] = seeds[i].y;
+      Vertex *v = vertices + (3 * TRIGS_PER_SEED * i + j);
+
+      v->pos[0] = seeds[i].x;
+      v->pos[1] = seeds[i].y;
     }
   }
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glUniform2f(u_resolution, width, height);
-
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+
+  glUniform2f(u_resolution, width, height);
   glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(Vertex));
 }

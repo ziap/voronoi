@@ -5,12 +5,12 @@ let memory_buffer
 const decoder = new TextDecoder()
 
 function cstr(ptr) {
-  const mem_arr = new Uint8Array(memory_buffer)
+  const mem_arr = new Uint8Array(memory_buffer, ptr)
 
   let len = 0;
-  while (mem_arr[ptr + len]) ++len
+  while (mem_arr[len]) ++len
 
-  const bytes = mem_arr.slice(ptr, ptr + len)
+  const bytes = mem_arr.slice(0, len)
   return decoder.decode(bytes);
 }
 

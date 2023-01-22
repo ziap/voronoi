@@ -5,6 +5,7 @@
 
 static unsigned int main_program;
 static int u_resolution;
+static int u_seed_scale;
 static int u_trig_count;
 
 static int width, height;
@@ -14,7 +15,7 @@ void resize(int new_w, int new_h) {
   glViewport(0, 0, new_w, new_h);
 }
 
-#define PI 3.141592653589793
+#define PI 3.141592653589793f
 
 #define SEED_COUNT 128
 #define TRIGS_PER_SEED 32
@@ -71,7 +72,7 @@ typedef struct {
 
 Seed seeds[SEED_COUNT];
 
-Seed create_seed() {
+static Seed create_seed() {
   Seed s;
   s.x = frand();
   s.y = frand();
@@ -79,7 +80,7 @@ Seed create_seed() {
   s.hue = frand();
 
   float angle = frand() * 2 * PI;
-  float speed = 0.04 + frand() * 0.08;
+  float speed = 0.04f + frand() * 0.08f;
 
   s.vx = fcos(angle) * speed;
   s.vy = fsin(angle) * speed;
@@ -118,21 +119,27 @@ void render_init() {
   );
 
   u_resolution = glGetUniformLocation(main_program, "u_resolution");
+  u_seed_scale = glGetUniformLocation(main_program, "u_seed_scale");
   u_trig_count = glGetUniformLocation(main_program, "u_trig_count");
+
+  glUniform1f(u_seed_scale, sqrtf(SEED_COUNT) / 4.0f);
   glUniform1i(u_trig_count, TRIGS_PER_SEED);
 };
 
-void update_seed(Seed *seed, float dt) {
-  seed->x += seed->vx * dt;
-  seed->y += seed->vy * dt;
+static void update_seed(Seed *seed, float dt) {
+  float dx = seed->vx * dt;
+  float dy = seed->vy * dt;
+
+  seed->x += dx;
+  seed->y += dy;
 
   if (seed->x < 0 || seed->x > 1) {
-    seed->x -= seed->vx * dt * 2;
+    seed->x -= dx;
     seed->vx = -seed->vx;
   }
 
   if (seed->y < 0 || seed->y > 1) {
-    seed->y -= seed->vy * dt * 2;
+    seed->y -= dy;
     seed->vy = -seed->vy;
   }
 }

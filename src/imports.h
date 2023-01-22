@@ -2,8 +2,9 @@
 #define IMPORTS_H
 
 #ifndef NULL
-#define NULL (void*)0
+#define NULL (const void*)0
 #define offsetof(t, d) __builtin_offsetof(t, d)
+#define sqrtf(x) __builtin_sqrtf(x)
 
 #define GL_DEPTH_TEST 0x0B71
 #define GL_FLOAT 0x1406

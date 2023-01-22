@@ -13,6 +13,7 @@ out vec2 seed_coord;
 out vec3 seed_color;
 
 uniform vec2 u_resolution;
+uniform float u_seed_scale;
 uniform int u_trig_count;
 
 vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -34,10 +35,13 @@ void main() {
     case 2: uv = vec3(cos(angle1), sin(angle1), 1.0); break;
   }
 
-  gl_Position = vec4((uv.xy) * 2.0 / u_resolution.xy * length(u_resolution.xy) + a_seed * 2.0 - 1.0, uv.z, 1.0);
+  float res_max = max(u_resolution.x, u_resolution.y);
+  float res_min = min(u_resolution.x, u_resolution.y);
+
+  gl_Position = vec4((uv.xy) / u_seed_scale / u_resolution.xy * length(u_resolution.xy) + a_seed * 2.0 - 1.0, uv.z, 1.0);
 
   vec3 hsv = vec3(a_color, 0.6, 1.0);
   vec3 rgb = hsv2rgb(hsv);
 
-  seed_color = mix(rgb, vec3(0.0), uv.z * 4.0);
+  seed_color = mix(rgb, vec3(0.0), uv.z * 0.5);
 }

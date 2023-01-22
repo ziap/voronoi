@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "voronoi.h"
 
@@ -80,9 +81,10 @@ int main(void) {
   unsigned frames = 0;
 
   resize(WIDTH, HEIGHT);
+
+  srand(time(0));
   render_init();
 
-  srand(last);
   while (!glfwWindowShouldClose(window)) {
     render_update(dt);
     glfwSwapBuffers(window);

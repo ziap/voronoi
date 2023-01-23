@@ -34,6 +34,11 @@ const env = {
     gl_objs.push(buffer)
     return gl_objs.length - 1
   },
+  glCreateVertexArray() {
+    const vao = gl.createVertexArray()
+    gl_objs.push(vao)
+    return gl_objs.length - 1
+  },
   glCreateShader(type) {
     const shader = gl.createShader(type)
     gl_objs.push(shader)
@@ -81,6 +86,9 @@ const env = {
   },
   glBindBuffer(target, buffer) {
     gl.bindBuffer(target, gl_objs[buffer])
+  },
+  glBindVertexArray(vao) {
+    gl.bindVertexArray(gl_objs[vao])
   },
   glEnableVertexAttribArray(index) {
     gl.enableVertexAttribArray(index)

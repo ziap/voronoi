@@ -3,7 +3,7 @@
 #include "../shaders/voronoi.h"
 #include "imports.h"
 
-static unsigned int main_program;
+static int main_program;
 static int u_resolution;
 static int u_seed_scale;
 static int u_trig_count;
@@ -20,8 +20,8 @@ void resize(int new_w, int new_h) {
 #define SEED_COUNT 128
 #define TRIGS_PER_SEED 32
 
-static int compile_shader(const char *src, unsigned int type) {
-  unsigned int shader = glCreateShader(type);
+static int compile_shader(const char *src, int type) {
+  int shader = glCreateShader(type);
   glSetShaderSource(shader, src);
   glCompileShader(shader);
 
@@ -104,6 +104,9 @@ void voronoi_init() {
   main_program = create_program(voronoi_vert, voronoi_frag);
   glUseProgram(main_program);
 
+  int vao = glCreateVertexArray();
+  glBindVertexArray(vao);
+
   vbo = glCreateBuffer();
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), NULL, GL_DYNAMIC_DRAW);
@@ -124,7 +127,7 @@ void voronoi_init() {
 
   glUniform1f(u_seed_scale, 4.0 / sqrtf(SEED_COUNT));
   glUniform1i(u_trig_count, TRIGS_PER_SEED);
-};
+}
 
 static void update_seed(Seed *seed, float dt) {
   float dx = seed->vx * dt;

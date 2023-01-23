@@ -1,7 +1,6 @@
 #ifndef IMPORTS_H
 #define IMPORTS_H
 
-#ifndef NULL
 #define NULL (const void*)0
 #define offsetof(t, d) __builtin_offsetof(t, d)
 #define sqrtf(x) __builtin_sqrtf(x)
@@ -16,7 +15,6 @@
 #define GL_COMPILE_STATUS 0x8B81
 #define GL_ARRAY_BUFFER 0x8892
 #define GL_DYNAMIC_DRAW 0x88E8
-#endif
 
 #ifndef __cplusplus
 typedef enum { false, true } bool;
@@ -27,30 +25,31 @@ extern float fsin(float);
 extern float fcos(float);
 extern int puts(const char*);
 
-extern int glCreateBuffer();
-extern int glCreateShader(unsigned int);
+extern int glCreateBuffer(void);
+extern int glCreateVertexArray(void);
+extern int glCreateShader(int);
 extern int glCreateProgram(void);
-extern int glGetUniformLocation(unsigned int, const char*);
-extern int glGetShaderParameter(unsigned int, unsigned int);
+extern int glGetUniformLocation(int, const char*);
+extern int glGetShaderParameter(int, int);
 extern void glViewport(int, int, int, int);
-extern void glSetShaderSource(unsigned int, const char*);
-extern void glCompileShader(unsigned int);
-extern void glDeleteShader(unsigned int);
-extern void glAttachShader(unsigned int, unsigned int);
-extern void glLinkProgram(unsigned int);
-extern void glValidateProgram(unsigned int);
-extern void glEnable(unsigned int);
-extern void glUseProgram(unsigned int);
-extern void glBindBuffer(unsigned int, unsigned int);
-extern void glEnableVertexAttribArray(unsigned int);
-extern void glBufferData(unsigned int, int, const void*, unsigned int);
-extern void
-glVertexAttribPointer(unsigned int, int, unsigned int, bool, int, const void*);
-extern void glClear(unsigned int);
-extern void glBufferSubData(unsigned int, int, int, void*);
+extern void glSetShaderSource(int, const char*);
+extern void glCompileShader(int);
+extern void glDeleteShader(int);
+extern void glAttachShader(int, int);
+extern void glLinkProgram(int);
+extern void glValidateProgram(int);
+extern void glEnable(int);
+extern void glUseProgram(int);
+extern void glBindBuffer(int, int);
+extern void glBindVertexArray(int);
+extern void glEnableVertexAttribArray(int);
+extern void glBufferData(int, int, const void*, int);
+extern void glVertexAttribPointer(int, int, int, bool, int, const void*);
+extern void glClear(int);
+extern void glBufferSubData(int, int, int, void*);
 extern void glUniform2f(int, float, float);
 extern void glUniform1f(int, float);
 extern void glUniform1i(int, int);
-extern void glDrawArrays(unsigned int, int, int);
+extern void glDrawArrays(int, int, int);
 
 #endif

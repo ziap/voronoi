@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS=-Wall -Wextra -march=native -mtune=native
+CFLAGS=-Wall -Wextra -pedantic -std=c99 -march=native -mtune=native
 LDLIBS=-lm -lglfw -lGL -lGLEW -lX11 -lGLU
 DEBUG_FLAGS=-Og -g
 BUILD_FLAGS=-O3 -s

@@ -83,10 +83,10 @@ int main(void) {
   resize(WIDTH, HEIGHT);
 
   srand(time(0));
-  render_init();
+  voronoi_init();
 
   while (!glfwWindowShouldClose(window)) {
-    render_update(dt);
+    voronoi_update(dt);
     glfwSwapBuffers(window);
     glfwPollEvents();
     frames += 1;

@@ -90,7 +90,7 @@ static Seed create_seed() {
 int vbo;
 Vertex vertices[3 * TRIGS_PER_SEED * SEED_COUNT];
 
-void render_init() {
+void voronoi_init() {
   glEnable(GL_DEPTH_TEST);
 
   for (int i = 0; i < SEED_COUNT; ++i) {
@@ -122,7 +122,7 @@ void render_init() {
   u_seed_scale = glGetUniformLocation(main_program, "u_seed_scale");
   u_trig_count = glGetUniformLocation(main_program, "u_trig_count");
 
-  glUniform1f(u_seed_scale, sqrtf(SEED_COUNT) / 4.0f);
+  glUniform1f(u_seed_scale, 4.0 / sqrtf(SEED_COUNT));
   glUniform1i(u_trig_count, TRIGS_PER_SEED);
 };
 
@@ -144,7 +144,7 @@ static void update_seed(Seed *seed, float dt) {
   }
 }
 
-void render_update(float dt) {
+void voronoi_update(float dt) {
   for (int i = 0; i < SEED_COUNT; ++i) {
     update_seed(seeds + i, dt);
 

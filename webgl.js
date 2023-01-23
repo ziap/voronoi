@@ -14,10 +14,7 @@ function cstr(ptr) {
   return decoder.decode(bytes);
 }
 
-let shaders = []
-let programs = []
-let buffers = []
-let uniforms = []
+let gl_objs = []
 
 const env = {
   frand() {
@@ -34,56 +31,56 @@ const env = {
   },
   glCreateBuffer() {
     const buffer = gl.createBuffer()
-    buffers.push(buffer)
-    return buffers.length - 1
+    gl_objs.push(buffer)
+    return gl_objs.length - 1
   },
   glCreateShader(type) {
     const shader = gl.createShader(type)
-    shaders.push(shader)
-    return shaders.length - 1
+    gl_objs.push(shader)
+    return gl_objs.length - 1
   },
   glCreateProgram() {
     const program = gl.createProgram()
-    programs.push(program)
-    return programs.length - 1
+    gl_objs.push(program)
+    return gl_objs.length - 1
   },
   glGetUniformLocation(program, name) {
-    const location = gl.getUniformLocation(programs[program], cstr(name))
-    uniforms.push(location)
-    return uniforms.length - 1
+    const location = gl.getUniformLocation(gl_objs[program], cstr(name))
+    gl_objs.push(location)
+    return gl_objs.length - 1
   },
   glViewport(x, y, w, h) {
     gl.viewport(x, y, w, h)
   },
   glSetShaderSource(shader, src) {
-    gl.shaderSource(shaders[shader], cstr(src))
+    gl.shaderSource(gl_objs[shader], cstr(src))
   },
   glCompileShader(shader) {
-    gl.compileShader(shaders[shader])
+    gl.compileShader(gl_objs[shader])
   },
   glGetShaderParameter(shader, pname) {
-    return gl.getShaderParameter(shaders[shader], pname)
+    return gl.getShaderParameter(gl_objs[shader], pname)
   },
   glDeleteShader(shader) {
-    gl.deleteShader(shaders[shader])
+    gl.deleteShader(gl_objs[shader])
   },
   glAttachShader(program, shader) {
-    gl.attachShader(programs[program], shaders[shader])
+    gl.attachShader(gl_objs[program], gl_objs[shader])
   },
   glLinkProgram(program) {
-    gl.linkProgram(programs[program])
+    gl.linkProgram(gl_objs[program])
   },
   glValidateProgram(program) {
-    gl.validateProgram(programs[program])
+    gl.validateProgram(gl_objs[program])
   },
   glEnable(cap) {
     gl.enable(cap)
   },
   glUseProgram(program) {
-    gl.useProgram(programs[program])
+    gl.useProgram(gl_objs[program])
   },
   glBindBuffer(target, buffer) {
-    gl.bindBuffer(target, buffers[buffer])
+    gl.bindBuffer(target, gl_objs[buffer])
   },
   glEnableVertexAttribArray(index) {
     gl.enableVertexAttribArray(index)
@@ -107,13 +104,13 @@ const env = {
     gl.bufferSubData(target, offset, slice)
   },
   glUniform2f(location, x, y) {
-    gl.uniform2f(uniforms[location], x, y)
+    gl.uniform2f(gl_objs[location], x, y)
   },
   glUniform1f(location, x) {
-    gl.uniform1f(uniforms[location], x)
+    gl.uniform1f(gl_objs[location], x)
   },
   glUniform1i(location, x) {
-    gl.uniform1i(uniforms[location], x)
+    gl.uniform1i(gl_objs[location], x)
   },
   glDrawArrays(mode, first, count) {
     gl.drawArrays(mode, first, count)
@@ -134,15 +131,18 @@ function resize() {
 addEventListener('resize', resize)
 resize()
 
-exports.render_init()
-
 let last = null
 
 function step(t) {
-  if (last) exports.render_update((t - last) / 1000)
-
+  exports.voronoi_update((t - last) / 1000)
   last = t
   requestAnimationFrame(step)
 }
 
-requestAnimationFrame(step)
+function init(t) {
+  exports.voronoi_init()
+  last = t
+  requestAnimationFrame(step)
+}
+
+requestAnimationFrame(init)

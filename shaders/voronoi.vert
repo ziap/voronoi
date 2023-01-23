@@ -38,7 +38,7 @@ void main() {
   float res_max = max(u_resolution.x, u_resolution.y);
   float res_min = min(u_resolution.x, u_resolution.y);
 
-  gl_Position = vec4((uv.xy) / u_seed_scale / u_resolution.xy * length(u_resolution.xy) + a_seed * 2.0 - 1.0, uv.z, 1.0);
+  gl_Position = vec4((uv.xy) * u_seed_scale / u_resolution.xy * length(u_resolution.xy) + a_seed * 2.0 - 1.0, uv.z, 1.0);
 
   vec3 hsv = vec3(a_color, 0.6, 1.0);
   vec3 rgb = hsv2rgb(hsv);

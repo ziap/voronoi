@@ -87,7 +87,6 @@ static Seed create_seed() {
   return s;
 }
 
-int vbo;
 Vertex vertices[3 * TRIGS_PER_SEED * SEED_COUNT];
 
 void voronoi_init() {
@@ -107,7 +106,7 @@ void voronoi_init() {
   int vao = glCreateVertexArray();
   glBindVertexArray(vao);
 
-  vbo = glCreateBuffer();
+  int vbo = glCreateBuffer();
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), NULL, GL_DYNAMIC_DRAW);
 
@@ -161,7 +160,6 @@ void voronoi_update(float dt) {
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
   glUniform2f(u_resolution, width, height);

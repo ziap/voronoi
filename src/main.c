@@ -20,23 +20,23 @@ void resize_callback(GLFWwindow *window, int new_w, int new_h) {
 }
 
 int glCreateBuffer() {
-  unsigned int buf;
+  GLuint buf;
   glCreateBuffers(1, &buf);
   return buf;
 }
 
 int glCreateVertexArray() {
-  unsigned int vao;
+  GLuint vao;
   glCreateVertexArrays(1, &vao);
   return vao;
 }
 
-void glSetShaderSource(unsigned int shader, const char *src) {
+void glSetShaderSource(int shader, const char *src) {
   glShaderSource(shader, 1, &src, NULL);
 }
 
-int glGetShaderParameter(unsigned int shader, unsigned int pname) {
-  int param;
+int glGetShaderParameter(int shader, int pname) {
+  GLint param;
   glGetShaderiv(shader, pname, &param);
   return param;
 }

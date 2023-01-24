@@ -3,10 +3,7 @@
 #include "../shaders/voronoi.h"
 #include "imports.h"
 
-static int main_program;
 static int u_resolution;
-static int u_seed_scale;
-static int u_trig_count;
 
 static int width, height;
 void resize(int new_w, int new_h) {
@@ -100,7 +97,7 @@ void voronoi_init() {
     }
   }
 
-  main_program = create_program(voronoi_vert, voronoi_frag);
+  int main_program = create_program(voronoi_vert, voronoi_frag);
   glUseProgram(main_program);
 
   int vao = glCreateVertexArray();
@@ -121,8 +118,9 @@ void voronoi_init() {
   );
 
   u_resolution = glGetUniformLocation(main_program, "u_resolution");
-  u_seed_scale = glGetUniformLocation(main_program, "u_seed_scale");
-  u_trig_count = glGetUniformLocation(main_program, "u_trig_count");
+
+  int u_seed_scale = glGetUniformLocation(main_program, "u_seed_scale");
+  int u_trig_count = glGetUniformLocation(main_program, "u_trig_count");
 
   glUniform1f(u_seed_scale, 4.0 / sqrtf(SEED_COUNT));
   glUniform1i(u_trig_count, TRIGS_PER_SEED);

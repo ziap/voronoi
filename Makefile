@@ -1,6 +1,6 @@
 CC=clang
 CFLAGS=-Wall -Wextra -pedantic -std=c99 -march=native -mtune=native
-LDLIBS=-lm -lglfw -lGL -lGLEW -lX11 -lGLU
+LDLIBS=-lm -lglfw -lGL -lGLEW
 DEBUG_FLAGS=-Og -g
 BUILD_FLAGS=-O3 -s
 WASM_FLAGS=-O3 --target=wasm32 -flto -fno-builtin -nostdlib -fvisibility=hidden
@@ -32,10 +32,10 @@ debug/$(OUTPUT): $(INPUTS) $(SHADER_OUTPUTS)
 	$(CC) -o $@ $(INPUTS) $(CFLAGS) $(DEBUG_FLAGS) $(LDLIBS)
 
 $(OUTPUT).wasm: $(SHADER_OUTPUTS)
-	$(CC) $(INPUT_DIR)/voronoi.c -o voronoi.o $(WASM_FLAGS) $(CFLAGS) -c
-	wasm-ld -o $@ $(WASM_LD_FLAGS) voronoi.o
+	$(CC) $(INPUT_DIR)/voronoi.c -o wasm.o $(WASM_FLAGS) $(CFLAGS) -c
+	wasm-ld -o $@ $(WASM_LD_FLAGS) wasm.o
 	wasm-opt $@ -o $@ $(WASM_OPT_FLAGS)
-	rm voronoi.o
+	rm wasm.o
 
 $(SHADER_OUTPUTS): $(SHADER_DIR)/%.h: $(SHADER_DIR)/%.frag $(SHADER_DIR)/%.vert
 	@echo Generating $@

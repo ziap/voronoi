@@ -14,7 +14,7 @@ void resize(int new_w, int new_h) {
 
 #define PI 3.141592653589793f
 
-#define SEED_COUNT 128
+#define SEED_COUNT 1024
 #define TRIGS_PER_SEED 32
 
 static int compile_shader(const char *src, int type) {
@@ -77,7 +77,7 @@ static Seed create_seed() {
   s.hue = frand();
 
   float angle = frand() * 2 * PI;
-  float speed = 0.04f + frand() * 0.08f;
+  float speed = (0.4f + frand() * 0.8f) / sqrtf(SEED_COUNT);
 
   s.vx = fcos(angle) * speed;
   s.vy = fsin(angle) * speed;

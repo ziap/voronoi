@@ -3,9 +3,9 @@ CFLAGS=-Wall -Wextra -pedantic -std=c99 -march=native -mtune=native
 LDLIBS=-lm -lglfw -lGL -lGLEW
 DEBUG_FLAGS=-Og -g
 BUILD_FLAGS=-O3 -s
-WASM_FLAGS=-O3 --target=wasm32 -flto -fno-builtin -nostdlib -fvisibility=hidden
-WASM_LD_FLAGS=--no-entry --strip-all --lto-O3 --allow-undefined --export-dynamic
-WASM_OPT_FLAGS=-O3
+WASM_CFLAGS=-O3 --target=wasm32 -flto -fno-builtin -nostdlib -fvisibility=hidden -msimd128 -mbulk-memory
+WASM_LDFLAGS=--no-entry --strip-debug --lto-O3 --allow-undefined --export-dynamic
+WASM_FLAGS=$(WASM_CFLAGS) $(foreach flag,$(WASM_LDFLAGS),-Wl,$(flag))
 
 INPUT_DIR=src
 INPUTS=$(wildcard $(INPUT_DIR)/*.c)
@@ -32,10 +32,7 @@ debug/$(OUTPUT): $(INPUTS) $(SHADER_OUTPUTS)
 	$(CC) -o $@ $(INPUTS) $(CFLAGS) $(DEBUG_FLAGS) $(LDLIBS)
 
 $(OUTPUT).wasm: $(SHADER_OUTPUTS)
-	$(CC) $(INPUT_DIR)/voronoi.c -o wasm.o $(WASM_FLAGS) $(CFLAGS) -c
-	wasm-ld -o $@ $(WASM_LD_FLAGS) wasm.o
-	wasm-opt $@ -o $@ $(WASM_OPT_FLAGS)
-	rm wasm.o
+	$(CC) $(INPUT_DIR)/voronoi.c -o $@ $(WASM_FLAGS) $(CFLAGS)
 
 $(SHADER_OUTPUTS): $(SHADER_DIR)/%.h: $(SHADER_DIR)/%.frag $(SHADER_DIR)/%.vert
 	@echo Generating $@

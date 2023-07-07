@@ -10,7 +10,7 @@
 #define WIDTH 960
 #define HEIGHT 720
 
-float frand() { return (float)rand() / (float)RAND_MAX; }
+float frand(void) { return (float)rand() / (float)RAND_MAX; }
 float fsin(float x) { return sin(x); }
 float fcos(float x) { return cos(x); }
 
@@ -19,13 +19,13 @@ void resize_callback(GLFWwindow *window, int new_w, int new_h) {
   resize(new_w, new_h);
 }
 
-int glCreateBuffer() {
+int glCreateBuffer(void) {
   GLuint buf;
   glCreateBuffers(1, &buf);
   return buf;
 }
 
-int glCreateVertexArray() {
+int glCreateVertexArray(void) {
   GLuint vao;
   glCreateVertexArrays(1, &vao);
   return vao;

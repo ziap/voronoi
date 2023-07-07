@@ -69,7 +69,7 @@ typedef struct {
 
 Seed seeds[SEED_COUNT];
 
-static Seed create_seed() {
+static Seed create_seed(void) {
   Seed s;
   s.x = frand();
   s.y = frand();
@@ -77,7 +77,7 @@ static Seed create_seed() {
   s.hue = frand();
 
   float angle = frand() * 2 * PI;
-  float speed = (0.4f + frand() * 0.8f) / sqrtf(SEED_COUNT);
+  float speed = (0.4f + sqrtf(frand()) * 0.8f) / sqrtf(SEED_COUNT);
 
   s.vx = fcos(angle) * speed;
   s.vy = fsin(angle) * speed;
@@ -86,7 +86,7 @@ static Seed create_seed() {
 
 Vertex vertices[3 * TRIGS_PER_SEED * SEED_COUNT];
 
-void voronoi_init() {
+void voronoi_init(void) {
   glEnable(GL_DEPTH_TEST);
 
   for (int i = 0; i < SEED_COUNT; ++i) {
